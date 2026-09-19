@@ -42,6 +42,20 @@ DOMAIN-KEYWORD,x       →  x        (子串匹配)
 IP-CIDR                →  (跳过, DNS 层无法按 IP 拦截)
 ```
 
+## 初始部署:配置 GitHub Secrets
+
+仓库的自动化依赖 3 个 GitHub Actions secrets,用于证书签发与部署(`renew-cert.yml`)。首次部署或迁移仓库时,在 GitHub 仓库页 **Settings → Secrets and variables → Actions → New repository secret** 依次添加:
+
+| Secret 名称 | 内容 | 获取方式 |
+|---|---|---|
+| `CF_TOKEN` | Cloudflare API Token | [Cloudflare Dashboard → My Profile → API Tokens](https://dash.cloudflare.com/profile/api-tokens) 创建,权限选 **Zone → DNS → Edit**,并授权 `dns.inceptae.com` 所在 Zone。证书通过 DNS-01 验证签发,需要它写 TXT 记录 |
+| `SSH_HOST` | 云服务器公网 IP | 你的 AdGuard Home 所在服务器 IP |
+| `SSH_KEY` | 服务器 SSH 私钥 | 本地执行 `ssh-keygen -t ed25519` 生成密钥对,把**私钥**文件全文(含 `-----BEGIN OPENSSH PRIVATE KEY-----` 和结尾空行)粘贴进去,并将对应**公钥**追加到服务器的 `/root/.ssh/authorized_keys` |
+
+配置完成后,到 **Actions → Renew DNS Cert → Run workflow** 手动触发一次,验证证书能签发并部署到服务器(日志末尾应出现 `Verify return code: 0 (ok)`)。
+
+> 安全提示:secrets 仅在 Actions 运行时注入,不会出现在日志和代码中;私钥不要提交到仓库。
+
 ## License
 
 GPL-3.0. Rule data is sourced daily from [GMOogway/shadowrocket-rules](https://github.com/GMOogway/shadowrocket-rules) (GPL-3.0); the converted lists in this repository are therefore distributed under the same license.
