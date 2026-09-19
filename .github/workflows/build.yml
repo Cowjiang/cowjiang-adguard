@@ -20,9 +20,9 @@ jobs:
 
       - name: Fetch upstream rules (GMOogway/shadowrocket-rules)
         run: |
-          curl -fsSL --retry 3 -o sr_reject_list.module \
+          curl -fsSL --retry 3 -o upstream/sr_reject_list.module \
             https://raw.githubusercontent.com/GMOogway/shadowrocket-rules/master/sr_reject_list.module
-          head -3 sr_reject_list.module
+          head -3 upstream/sr_reject_list.module
 
       - name: Build AdGuard lists & profile
         run: |
@@ -33,7 +33,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add agh_custom_reject.txt agh_sr_reject.txt Cowjiang-AdGuard.mobileconfig sr_reject_list.module
+          git add dist/agh_custom_reject.txt dist/agh_sr_reject.txt dist/Cowjiang-AdGuard.mobileconfig upstream/sr_reject_list.module
           git diff --cached --quiet || git commit -m "build: daily update [skip ci]"
           git push
 

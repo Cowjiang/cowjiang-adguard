@@ -45,9 +45,9 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           if gh release view profile >/dev/null 2>&1; then
-            gh release upload profile Cowjiang-AdGuard.mobileconfig --clobber
+            gh release upload profile dist/Cowjiang-AdGuard.mobileconfig --clobber
           else
-            gh release create profile Cowjiang-AdGuard.mobileconfig \
+            gh release create profile dist/Cowjiang-AdGuard.mobileconfig \
               --title "Cowjiang AdGuard Profile" \
               --notes "iOS DNS profile (DoT). Install: download the asset in Safari, open it in Files, then install. Rules update daily, no reinstall needed."
           fi

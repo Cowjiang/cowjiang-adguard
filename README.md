@@ -8,20 +8,26 @@
 
 ## 数据来源与处理链路
 
-每日自动从 [GMOogway/shadowrocket-rules](https://github.com/GMOogway/shadowrocket-rules) 拉取最新的 `sr_reject_list.module`（约 19 万条拦截规则），加上本仓库人工维护的 `custom_reject_list.module`，由 `factory/build_agh.sh` 转换为 AdGuard DNS 过滤语法：
+每日自动从 [GMOogway/shadowrocket-rules](https://github.com/GMOogway/shadowrocket-rules) 拉取最新的 `upstream/sr_reject_list.module`（约 19 万条拦截规则），加上本仓库人工维护的 `rules/custom_reject_list.module`，由 `factory/build_agh.sh` 转换为 AdGuard DNS 过滤语法：
 
 | 生成物 | 用途 | AGH 订阅地址 |
 |---|---|---|
-| `agh_sr_reject.txt` | 上游全量拦截列表 | `raw.githubusercontent.com/<你>/<新仓库>/master/agh_sr_reject.txt` |
-| `agh_custom_reject.txt` | 自定义拦截规则 | `raw.githubusercontent.com/<你>/<新仓库>/master/agh_custom_reject.txt` |
-| `Cowjiang-AdGuard.mobileconfig` | iOS 描述文件 | [Release 下载](https://github.com/Cowjiang/cowjiang-adguard/releases/download/profile/Cowjiang-AdGuard.mobileconfig) |
+| `dist/agh_sr_reject.txt` | 上游全量拦截列表 | `raw.githubusercontent.com/<你>/<新仓库>/master/dist/agh_sr_reject.txt` |
+| `dist/agh_custom_reject.txt` | 自定义拦截规则 | `raw.githubusercontent.com/<你>/<新仓库>/master/dist/agh_custom_reject.txt` |
+| `dist/Cowjiang-AdGuard.mobileconfig` | iOS 描述文件 | [Release 下载](https://github.com/Cowjiang/cowjiang-adguard/releases/download/profile/Cowjiang-AdGuard.mobileconfig) |
 
 ## 仓库结构
 
 ```
-├── custom_reject_list.module      # 人工维护的自定义拦截规则 (Shadowrocket 语法)
-├── sr_reject_list.module          # 每日自动从上游拉取 (CI 生成, 勿手改)
-├── factory/build_agh.sh           # 语法转换 + 描述文件生成
+├── rules/                          # 源规则 (人工维护)
+│   └── custom_reject_list.module   # 自定义拦截规则 (Shadowrocket 语法)
+├── upstream/                       # 上游规则快照 (CI 生成, 勿手改)
+│   └── sr_reject_list.module       # 每日从 GMOogway/shadowrocket-rules 拉取
+├── dist/                           # 生成物 (CI 生成, 勿手改)
+│   ├── agh_sr_reject.txt           # 转换后的上游全量拦截列表
+│   ├── agh_custom_reject.txt       # 转换后的自定义拦截列表
+│   └── Cowjiang-AdGuard.mobileconfig  # iOS 描述文件
+├── factory/build_agh.sh            # 语法转换 + 描述文件生成
 └── .github/workflows/
     ├── build.yml                  # 每日: 拉上游 → 转换 → 提交 → 更新 Release
     └── renew-cert.yml             # 双月: 签发/部署 dns.inceptae.com 证书
