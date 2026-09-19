@@ -3,7 +3,7 @@
 自建 DNS 广告过滤系统：基于 AdGuard Home + 自有云服务器，为 iOS / Android / 全屋设备提供广告与追踪拦截。
 
 - iOS：安装 [Cowjiang-AdGuard.mobileconfig](https://github.com/Cowjiang/cowjiang-adguard/releases/download/profile/Cowjiang-AdGuard.mobileconfig) 描述文件（加密 DNS DoT，蜂窝/Wi-Fi 全局生效）
-- Android：设置 → 网络 → 私人 DNS → 填入 `dns.inceptae.com`
+- Android：设置 → 网络 → 私人 DNS → 填入你的 DoT 域名（如 `dns.example.com`）
 - 家庭路由器 / 其他设备：DNS 填服务器 IP（明文 53）
 
 ## 数据来源与处理链路
@@ -30,7 +30,7 @@
 ├── factory/build_agh.sh            # 语法转换 + 描述文件生成
 └── .github/workflows/
     ├── build.yml                  # 每日: 拉上游 → 转换 → 提交 → 更新 Release
-    └── renew-cert.yml             # 双月: 签发/部署 dns.inceptae.com 证书
+    └── renew-cert.yml             # 双月: 签发/部署 DoT 域名证书
 ```
 
 ## 规则语法映射
@@ -44,17 +44,11 @@ IP-CIDR                →  (跳过, DNS 层无法按 IP 拦截)
 
 ## 初始部署:配置 GitHub Secrets
 
-仓库的自动化依赖 3 个 GitHub Actions secrets,用于证书签发与部署(`renew-cert.yml`)。首次部署或迁移仓库时,在 GitHub 仓库页 **Settings → Secrets and variables → Actions → New repository secret** 依次添加:
+证书签发与部署(`renew-cert.yml`)依赖 3 个 secrets,在 **Settings → Secrets and variables → Actions** 中添加:
 
-| Secret 名称 | 内容 | 获取方式 |
-|---|---|---|
-| `CF_TOKEN` | Cloudflare API Token | [Cloudflare Dashboard → My Profile → API Tokens](https://dash.cloudflare.com/profile/api-tokens) 创建,权限选 **Zone → DNS → Edit**,并授权 `dns.inceptae.com` 所在 Zone。证书通过 DNS-01 验证签发,需要它写 TXT 记录 |
-| `SSH_HOST` | 云服务器公网 IP | 你的 AdGuard Home 所在服务器 IP |
-| `SSH_KEY` | 服务器 SSH 私钥 | 本地执行 `ssh-keygen -t ed25519` 生成密钥对,把**私钥**文件全文(含 `-----BEGIN OPENSSH PRIVATE KEY-----` 和结尾空行)粘贴进去,并将对应**公钥**追加到服务器的 `/root/.ssh/authorized_keys` |
-
-配置完成后,到 **Actions → Renew DNS Cert → Run workflow** 手动触发一次,验证证书能签发并部署到服务器(日志末尾应出现 `Verify return code: 0 (ok)`)。
-
-> 安全提示:secrets 仅在 Actions 运行时注入,不会出现在日志和代码中;私钥不要提交到仓库。
+- `CF_TOKEN` — Cloudflare API Token(权限:Zone → DNS → Edit),用于 DNS-01 验证
+- `SSH_HOST` — 服务器地址
+- `SSH_KEY` — 服务器 SSH 私钥
 
 ## License
 
