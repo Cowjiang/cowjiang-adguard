@@ -110,11 +110,11 @@ statistics:
   ignored_enabled: false
 filters:
   - enabled: true
-    url: https://raw.githubusercontent.com/Cowjiang/cowjiang-adguard/refs/heads/refactory/refact/agrules/agh_custom_reject.txt
+    url: https://raw.giteeusercontent.com/agitator/cowjiang-adguard/raw/refactory/refact/agrules/agh_custom_reject.txt
     name: cowjiang custom
     id: 1790046054
   - enabled: true
-    url: https://raw.githubusercontent.com/Cowjiang/cowjiang-adguard/refs/heads/refactory/refact/agrules/agh_sr_reject.txt
+    url: https://raw.giteeusercontent.com/agitator/cowjiang-adguard/raw/refactory/refact/agrules/agh_sr_reject.txt
     name: GMOogway/shadowrocket-rules
     id: 1790046055
 whitelist_filters: []

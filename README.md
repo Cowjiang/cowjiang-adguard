@@ -8,9 +8,9 @@
 
 在 AdGuard Home 管理界面的「过滤 → DNS 拦截」中添加以下订阅规则：
 
-| 名称 | 订阅地址 |
-|------|----------|
-| Cowjiang SR Reject | `https://raw.githubusercontent.com/Cowjiang/cowjiang-adguard/master/dist/agh_sr_reject.txt` |
+| 名称                     | 订阅地址                                                                                            |
+|------------------------|-------------------------------------------------------------------------------------------------|
+| Cowjiang SR Reject     | `https://raw.githubusercontent.com/Cowjiang/cowjiang-adguard/master/dist/agh_sr_reject.txt`     |
 | Cowjiang Custom Reject | `https://raw.githubusercontent.com/Cowjiang/cowjiang-adguard/master/dist/agh_custom_reject.txt` |
 
 添加后启用即可生效，规则每日自动更新。
@@ -24,8 +24,19 @@ cd deployment
 docker-compose up -d
 ```
 
-启动后访问 `http://localhost:3000` 完成初始化设置，过滤规则已自动订阅。
+启动后访问 `http://localhost:3000` 账号密码:admin/adguardadmin
 
+### 修改账号密码(务必修改否则不要对外暴露3000)
+
+- 使用`bcrypt`算法加密，将密文填写到配置文件`deployment/conf/AdGuardHome.yaml`即可
+- `bcrypt`可以直接搜索，有在线工具。也可以按照`ZTools`然后安装`CryptTool`插件
+
+```yaml
+users:
+  - name: admin
+    password: 密文 
+```
+- 修改完成后`docker-compose restart`
 ### 客户端配置
 
 **iOS**：TODO
