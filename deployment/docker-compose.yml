@@ -11,4 +11,4 @@ services:
       - "3000:3000/tcp" # webui
     volumes:
       - ./work:/opt/adguardhome/work
-      - ./conf/AdGuardHome.yaml:/opt/adguardhome/conf/AdGuardHome.yaml
+      - ./conf:/opt/adguardhome/conf
