@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  adguardhome:
+    image: adguard/adguardhome:latest
+    container_name: adguardhome
+    restart: unless-stopped
+    ports:
+      - "853:53/tcp"
+      - "853:53/udp"
+      - "3000:3000/tcp" # webui
+    volumes:
+      - ./work:/opt/adguardhome/work
+      - ./conf-gitee:/opt/adguardhome/conf
